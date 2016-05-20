@@ -383,6 +383,11 @@ if( ~isempty(annotations_wrapper) )
     end    
 end
 
+% todo: handle multiple delineations structs
+if( ~isempty(ECG_w) && ~isempty(ECG_w.ECG_delineation) )
+    annotations = ECG_w.ECG_delineation;
+end
+
 if( isa(global_annotations, 'ECGwrapper') )
     global_annotations_wrapper = global_annotations;
 elseif( bWrapper_provided )
@@ -4041,7 +4046,7 @@ end
     function this_hdl = PlotWaveMarks( this_annotation, field_names, lead, vertTextOffset, this_color)
 
         this_hdl = {};
-        
+       
         if( isfield(this_annotation, field_names{1} ) )
             aux_on = colvec(this_annotation.(field_names{1}));
             aux_on( aux_on < 1 | aux_on > heasig.nsamp) = nan;
@@ -4062,6 +4067,8 @@ end
         else
             aux_off = [];
         end
+        
+%         aux_mat = match_positions(aux_mat);
         
         if( ann_graph_mode == kLinesAnns ) 
             
